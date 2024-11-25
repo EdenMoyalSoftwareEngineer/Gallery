@@ -3632,6 +3632,23 @@ __metadata:
   languageName: node
   linkType: hard
 
+"expo-camera@npm:~16.0.7":
+  version: 16.0.7
+  resolution: "expo-camera@npm:16.0.7"
+  dependencies:
+    invariant: ^2.2.4
+  peerDependencies:
+    expo: "*"
+    react: "*"
+    react-native: "*"
+    react-native-web: "*"
+  peerDependenciesMeta:
+    react-native-web:
+      optional: true
+  checksum: 57e839417cf6da40ce923a039a65cbc49ae94948de44dc0604965823c0a4eaccb5a65417833c3a0d1155ede7de234abe18da21c4a9e4129b2b2fa9207121fd7a
+  languageName: node
+  linkType: hard
+
 "expo-constants@npm:~17.0.0, expo-constants@npm:~17.0.3":
   version: 17.0.3
   resolution: "expo-constants@npm:17.0.3"
@@ -3666,6 +3683,26 @@ __metadata:
     expo: "*"
     react: "*"
   checksum: 7f504cff563ae865d4138c0c5aa9f71a77d4edfbb3d9decde94691832bc7cb9fb9c27ddd64cfdfe81c63c4486102a79213ff8690c7b4c3973bd4e08e87f184cf
+  languageName: node
+  linkType: hard
+
+"expo-image-loader@npm:~5.0.0":
+  version: 5.0.0
+  resolution: "expo-image-loader@npm:5.0.0"
+  peerDependencies:
+    expo: "*"
+  checksum: 7741b4b926124a1f85e51b0b8c8c9adc37fccf0654eaa0e715cb55cffc716bdc149c0421120f9bec69a69643d3328ec8562899b4aa37a0fdcecfb6fe3cf6f985
+  languageName: node
+  linkType: hard
+
+"expo-image-picker@npm:~16.0.3":
+  version: 16.0.3
+  resolution: "expo-image-picker@npm:16.0.3"
+  dependencies:
+    expo-image-loader: ~5.0.0
+  peerDependencies:
+    expo: "*"
+  checksum: b5a35d51cdabf5ca23013e69fe3f8250f7828ecb3c74840b058e969d80c009797e994a39a44e77f8b47711b6766ce62b6eece5d4cc7053784a99634b1485669c
   languageName: node
   linkType: hard
 
@@ -4070,6 +4107,8 @@ __metadata:
     "@types/react": ~18.3.12
     "@types/react-native": ^0.73.0
     expo: ~52.0.11
+    expo-camera: ~16.0.7
+    expo-image-picker: ~16.0.3
     expo-status-bar: ~2.0.0
     react: 18.3.1
     react-native: 0.76.3
