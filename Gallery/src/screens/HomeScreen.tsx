@@ -84,6 +84,7 @@ const HomeScreen = ({ navigation }: Props) => {
       <View>
         <CustomButton title="Pick Image from Gallery" action={pickImage} />
         <CustomButton title="Take a Photo" action={takePhoto} />
+        <CustomButton title="Go To Gallery" action={()=>navigation.navigate('Gallery')} />
       </View>
     </View>
   );
