@@ -1,4 +1,4 @@
-import React from "react";
+import React, { memo } from "react";
 import { StyleSheet, Text, TouchableOpacity } from "react-native";
 
 type Props = {
@@ -18,7 +18,7 @@ const CustomButton = ({ title, action }: Props) => {
   );
 };
 
-export default CustomButton;
+export default memo(CustomButton);
 
 const styles = StyleSheet.create({
   button: {

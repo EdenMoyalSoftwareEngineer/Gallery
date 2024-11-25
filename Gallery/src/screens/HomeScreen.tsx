@@ -1,65 +1,89 @@
-import { Camera } from "expo-camera";
 import * as ImagePicker from "expo-image-picker";
-import React from "react";
-import { Alert, StyleSheet, View } from "react-native";
+import React, { useCallback, useState } from "react";
+import { ActivityIndicator, Alert, StyleSheet, View } from "react-native";
 import CustomButton from "../components/CustomButton";
+import { saveImage } from "../services/storageService";
 import { HomeScreenNavigationProp } from "../types/navigation";
 
 type Props = {
   navigation: HomeScreenNavigationProp;
 };
+
 const HomeScreen = ({ navigation }: Props) => {
-  const pickImage = async () => {
-    try {
-      let result = await ImagePicker.launchImageLibraryAsync({
-        mediaTypes: ["images"],
-        allowsEditing: true,
-        aspect: [4, 3],
-        quality: 1,
-      });
+  const [isLoading, setIsLoading] = useState(false);
 
-      console.log(result);
-
-      if (!result.canceled) {
-        // do something
-      }
-    } catch (error) {
-      Alert.alert("Error", "Failed to open gallery.");
-      console.error(error);
+  const requestCameraPermission = async () => {
+    const { status } = await ImagePicker.requestCameraPermissionsAsync();
+    if (status !== "granted") {
+      Alert.alert(
+        "Permission Denied",
+        "Camera permission is required to use this feature.\nPlease enable Camera permissions in your device settings."
+      );
+      return false;
     }
+    return true;
   };
 
-  const takePhoto = async () => {
+  const saveImageToStorage = useCallback(async (uri: string) => {
     try {
-      const { status } = await Camera.requestCameraPermissionsAsync();
-      if (status !== "granted") {
-        Alert.alert(
-          "Permission Denied",
-          "Camera permission is required to use this feature."
-        );
-        return;
-      }
+      setIsLoading(true);
+      await saveImage(uri); 
+      Alert.alert("Success", "Image saved successfully!");
+    } catch (error) {
+      Alert.alert("Error", "Failed to save image.");
+      console.error("Save Image Error:", error);
+    } finally {
+      setIsLoading(false); 
+    }
+  }, []); 
+  
 
-      const result = await ImagePicker.launchCameraAsync({
+  const pickImage = useCallback(async () => {
+    try {
+      const result = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes: ["images"],
         quality: 1,
       });
 
       if (!result.canceled && result.assets) {
         const uri = result.assets[0].uri;
-        console.log('uri', uri)
-        // await saveImageToStorage(uri);
+        await saveImageToStorage(uri);
+      }
+    } catch (error) {
+      Alert.alert("Error", "Failed to open gallery.");
+      console.error("Gallery Error:", error);
+    }
+  }, [saveImageToStorage]);
+
+  const takePhoto = useCallback(async () => {
+    try {
+      const hasPermission = await requestCameraPermission();
+      if (!hasPermission) return;
+      const result = await ImagePicker.launchCameraAsync({
+        allowsEditing: true,
+        quality: 1,
+      });
+
+      if (!result.canceled && result.assets) {
+        const uri = result.assets[0].uri;
+        await saveImageToStorage(uri);
       }
     } catch (error) {
       Alert.alert("Error", "Failed to take a photo.");
-      console.error(error);
+      console.error("Camera Error:", error);
     }
-  };
+  }, [requestCameraPermission, saveImageToStorage]);
 
   return (
     <View style={styles.container}>
+      {isLoading && (
+        <View style={styles.loadingOverlay}>
+          <ActivityIndicator size="large" color="#007BFF" />
+        </View>
+      )}
       <View>
-        <CustomButton title={"Pick Image from Gallery"} action={pickImage} />
-        <CustomButton title={"Take a Photo"} action={takePhoto} />
+        <CustomButton title="Pick Image from Gallery" action={pickImage} />
+        <CustomButton title="Take a Photo" action={takePhoto} />
       </View>
     </View>
   );
@@ -73,5 +97,12 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     backgroundColor: "#f5f5f0",
+  },
+  loadingOverlay: {
+    ...StyleSheet.absoluteFillObject, 
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
+    justifyContent: "center",
+    alignItems: "center",
+    zIndex: 10, 
   },
 });
