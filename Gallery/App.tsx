@@ -1,11 +1,22 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import HomeScreen from './src/screens/HomeScreen';
 import GalleryScreen from './src/screens/GalleryScreen';
+import { requestNotificationPermissions, scheduleNotification } from './src/services/notificationService';
 
 const Stack = createStackNavigator();
-export default function App() {
+const App = () => {
+  useEffect(() => {
+    (async () => {
+      const hasPermission = await requestNotificationPermissions();
+      if (hasPermission) {
+        await scheduleNotification();
+      }
+    })();
+  }, []);
+
+  
   return (
     <NavigationContainer>
     <Stack.Navigator initialRouteName="Home">
@@ -16,3 +27,4 @@ export default function App() {
   );
 }
 
+export default App;
