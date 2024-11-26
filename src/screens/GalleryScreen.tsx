@@ -10,6 +10,7 @@ import {
   View,
 } from "react-native";
 import { usePaginatedImages } from "../hooks/usePaginatedImages";
+import Loading from "../components/Loading";
 
 const { width, height } = Dimensions.get("window");
 
@@ -28,9 +29,7 @@ const GalleryScreen: React.FC = () => {
         renderItem={renderImage}
         onEndReached={hasMore ? loadMore : null}
         onEndReachedThreshold={0.1}
-        ListFooterComponent={
-          loading ? <ActivityIndicator size="large" color="#007BFF" /> : null
-        }
+        ListFooterComponent={loading ? <Loading /> : null}
         ListEmptyComponent={
           !loading ? (
             <Text style={styles.noImagesText}>No images to display</Text>

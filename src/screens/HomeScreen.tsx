@@ -67,7 +67,7 @@ const HomeScreen = ({ navigation }: Props) => {
   return (
     <View style={styles.container}>
       {isLoading && (
-        <Loading/>
+        <Loading blockView/>
       )}
       <View>
         <CustomButton title="Pick Image from Gallery" action={pickImage} />

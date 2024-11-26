@@ -1,12 +1,21 @@
-import { ActivityIndicator, StyleSheet, Text, View } from "react-native";
 import React from "react";
+import { ActivityIndicator, StyleSheet, View } from "react-native";
 
-const Loading = () => {
-  return (
-    <View style={styles.loadingOverlay}>
-      <ActivityIndicator size="large" color="#007BFF" />
-    </View>
+type Props = {
+  blockView?: boolean;
+};
+
+const Loading = ({ blockView = false }: Props) => {
+
+  const renderActivityIndicator = () => (
+    <ActivityIndicator size="large" color="#007BFF" />
   );
+
+  if (blockView)
+    return (
+      <View style={styles.loadingOverlay}>{renderActivityIndicator()}</View>
+    );
+  return renderActivityIndicator();
 };
 
 export default Loading;
