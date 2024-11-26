@@ -27,7 +27,7 @@ An image gallery app built with **React Native** and **Expo**, featuring:
 1. Clone the repository:
    git clone git@github.com:EdenMoyalSoftwareEngineer/Gallery.git
 2. Navigate to the project directory:
-  cd ImageGallery
+  cd Gallery
 3. Install dependencies:
   yarn install
 4. Start the Expo development server:
