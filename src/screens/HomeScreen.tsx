@@ -1,10 +1,11 @@
 import * as ImagePicker from "expo-image-picker";
 import React, { useCallback, useState } from "react";
-import { ActivityIndicator, Alert, StyleSheet, View } from "react-native";
+import { Alert, StyleSheet, View } from "react-native";
 import CustomButton from "../components/CustomButton";
+import Loading from "../components/Loading";
+import { requestCameraPermission } from "../services/permissionService";
 import { saveImage } from "../services/storageService";
 import { HomeScreenNavigationProp } from "../types/navigation";
-import { requestCameraPermission } from "../services/permissionService";
 
 type Props = {
   navigation: HomeScreenNavigationProp;
@@ -66,9 +67,7 @@ const HomeScreen = ({ navigation }: Props) => {
   return (
     <View style={styles.container}>
       {isLoading && (
-        <View style={styles.loadingOverlay}>
-          <ActivityIndicator size="large" color="#007BFF" />
-        </View>
+        <Loading/>
       )}
       <View>
         <CustomButton title="Pick Image from Gallery" action={pickImage} />
@@ -88,11 +87,5 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     backgroundColor: "#f5f5f0",
   },
-  loadingOverlay: {
-    ...StyleSheet.absoluteFillObject, 
-    backgroundColor: "rgba(0, 0, 0, 0.5)",
-    justifyContent: "center",
-    alignItems: "center",
-    zIndex: 10, 
-  },
+
 });
