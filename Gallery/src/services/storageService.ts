@@ -9,7 +9,7 @@ export const saveImage = async (uri: string) => {
     await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(images));
 };
 
-export const getImages = async () => {
+export const getImages = async (): Promise<string[]> => {
     const storedImages = await AsyncStorage.getItem(STORAGE_KEY);
     return storedImages ? JSON.parse(storedImages) : [];
 };
