@@ -4,6 +4,7 @@ import { ActivityIndicator, Alert, StyleSheet, View } from "react-native";
 import CustomButton from "../components/CustomButton";
 import { saveImage } from "../services/storageService";
 import { HomeScreenNavigationProp } from "../types/navigation";
+import { requestCameraPermission } from "../services/permissionService";
 
 type Props = {
   navigation: HomeScreenNavigationProp;
@@ -11,18 +12,6 @@ type Props = {
 
 const HomeScreen = ({ navigation }: Props) => {
   const [isLoading, setIsLoading] = useState(false);
-
-  const requestCameraPermission = async () => {
-    const { status } = await ImagePicker.requestCameraPermissionsAsync();
-    if (status !== "granted") {
-      Alert.alert(
-        "Permission Denied",
-        "Camera permission is required to use this feature.\nPlease enable Camera permissions in your device settings."
-      );
-      return false;
-    }
-    return true;
-  };
 
   const saveImageToStorage = useCallback(async (uri: string) => {
     try {

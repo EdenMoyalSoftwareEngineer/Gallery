@@ -21,11 +21,3 @@ export const scheduleNotification = async () => {
   });
 };
 
-export const requestNotificationPermissions = async () => {
-    const { status } = await Notifications.requestPermissionsAsync();
-    if (status !== 'granted') {
-      alert('Permission for notifications was denied.');
-      return false;
-    }
-    return true;
-};
