@@ -1,56 +1,22 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React from "react";
 import {
   ActivityIndicator,
-  Alert,
   Dimensions,
   FlatList,
   Image,
+  ListRenderItem,
   StyleSheet,
   Text,
   View,
 } from "react-native";
-import { getImages } from "../services/storageService";
+import { usePaginatedImages } from "../hooks/usePaginatedImages";
 
 const { width, height } = Dimensions.get("window");
-const IMAGES_PER_PAGE = 2;
 
 const GalleryScreen: React.FC = () => {
-  const [images, setImages] = useState<string[]>([]);
-  const [loading, setLoading] = useState(false);
-  const [page, setPage] = useState(1);
-  const [hasMore, setHasMore] = useState(true);
+  const { images, loading, hasMore, loadMore } = usePaginatedImages();
 
-  const fetchImages = useCallback(async (pageNumber: number) => {
-    try {
-      setLoading(true);
-      const storedImages = await getImages();
-      const startIndex = (pageNumber - 1) * IMAGES_PER_PAGE;
-      const endIndex = startIndex + IMAGES_PER_PAGE;
-      const newImages = storedImages.slice(startIndex, endIndex);
-      if (newImages.length === 0) {
-        setHasMore(false);
-      } else {
-        setImages((prevImages) => [...prevImages, ...newImages]);
-      }
-    } catch (error) {
-      Alert.alert("Error", "Failed to fetch images.");
-      console.error("Fetch Images Error:", error);
-    } finally {
-      setLoading(false);
-    }
-  }, []);
-
-  useEffect(() => {
-    fetchImages(page);
-  }, [fetchImages, page]);
-
-  const loadMoreImages = () => {
-    if (!loading && hasMore) {
-      setPage((prevPage) => prevPage + 1);
-    }
-  };
-
-  const renderImage = ({ item }: { item: string }) => (
+  const renderImage: ListRenderItem<string> | null | undefined = ({ item }) => (
     <Image source={{ uri: item }} style={styles.image} resizeMode="cover" />
   );
 
@@ -60,15 +26,17 @@ const GalleryScreen: React.FC = () => {
         data={images}
         keyExtractor={(_, index) => index.toString()}
         renderItem={renderImage}
-        onEndReached={loadMoreImages}
+        onEndReached={hasMore ? loadMore : null}
         onEndReachedThreshold={0.1}
         ListFooterComponent={
           loading ? <ActivityIndicator size="large" color="#007BFF" /> : null
         }
         ListEmptyComponent={
-          !loading?(
+          !loading ? (
             <Text style={styles.noImagesText}>No images to display</Text>
-          ):<></>
+          ) : (
+            <></>
+          )
         }
       />
     </View>
