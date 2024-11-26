@@ -25,7 +25,7 @@ const GalleryScreen: React.FC = () => {
     <View style={styles.container}>
       <FlatList
         data={images}
-        keyExtractor={(_, index) => index.toString()}
+        keyExtractor={(item) => item}
         renderItem={renderImage}
         onEndReached={hasMore ? loadMore : null}
         onEndReachedThreshold={0.1}
