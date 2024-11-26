@@ -5,15 +5,20 @@ import HomeScreen from "./src/screens/HomeScreen";
 import GalleryScreen from "./src/screens/GalleryScreen";
 import { scheduleNotification } from "./src/services/notificationService";
 import { requestNotificationPermission } from "./src/services/permissionService";
+import { Alert } from "react-native";
 
 const Stack = createStackNavigator();
 const App = () => {
   useEffect(() => {
     (async () => {
-      const hasPermission = await requestNotificationPermission();
-      if (hasPermission) {
-        await scheduleNotification();
-      }
+     try {
+       const hasPermission = await requestNotificationPermission();
+       if (hasPermission) {
+         await scheduleNotification();
+       }
+     } catch (error) {
+      Alert.alert('Error trying to set notifications')
+     }
     })();
   }, []);
 
