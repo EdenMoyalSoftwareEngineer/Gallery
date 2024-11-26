@@ -9,10 +9,13 @@ export const usePaginatedImages = () => {
   const [loading, setLoading] = useState(false);
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
 
   const fetchImages = useCallback(async (pageNumber: number) => {
     try {
       setLoading(true);
+      setError(null);
       const storedImages = await getImages();
       const startIndex = (pageNumber - 1) * IMAGES_PER_PAGE;
       const newImages = storedImages.slice(startIndex, startIndex + IMAGES_PER_PAGE);
@@ -23,7 +26,7 @@ export const usePaginatedImages = () => {
         setImages((prevImages) => [...prevImages, ...newImages]);
       }
     } catch (error) {
-      Alert.alert("Error", "Failed to fetch images.");
+      setError("Failed to fetch images.");
       console.error("Fetch Images Error:", error);
     } finally {
       setLoading(false);
@@ -40,5 +43,5 @@ export const usePaginatedImages = () => {
     }
   };
 
-  return { images, loading, hasMore, loadMore };
+  return { images, loading, hasMore, loadMore, error };
 };

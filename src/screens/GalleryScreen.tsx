@@ -1,6 +1,5 @@
 import React from "react";
 import {
-  ActivityIndicator,
   Dimensions,
   FlatList,
   Image,
@@ -9,17 +8,28 @@ import {
   Text,
   View,
 } from "react-native";
-import { usePaginatedImages } from "../hooks/usePaginatedImages";
 import Loading from "../components/Loading";
+import { usePaginatedImages } from "../hooks/usePaginatedImages";
 
 const { width, height } = Dimensions.get("window");
 
 const GalleryScreen: React.FC = () => {
-  const { images, loading, hasMore, loadMore } = usePaginatedImages();
+  const { images, loading, error, hasMore, loadMore } = usePaginatedImages();
 
   const renderImage: ListRenderItem<string> | null | undefined = ({ item }) => (
     <Image source={{ uri: item }} style={styles.image} resizeMode="cover" />
   );
+
+  const renderEmptyList = () => {
+    if (loading) return <></>;
+    if (error)
+      return (
+        <Text style={styles.errorText}>
+          {error}
+        </Text>
+      );
+    return <Text style={styles.noImagesText}>No images to display</Text>;
+  };
 
   return (
     <View style={styles.container}>
@@ -30,13 +40,7 @@ const GalleryScreen: React.FC = () => {
         onEndReached={hasMore ? loadMore : null}
         onEndReachedThreshold={0.1}
         ListFooterComponent={loading ? <Loading /> : null}
-        ListEmptyComponent={
-          !loading ? (
-            <Text style={styles.noImagesText}>No images to display</Text>
-          ) : (
-            <></>
-          )
-        }
+        ListEmptyComponent={renderEmptyList()}
       />
     </View>
   );
@@ -56,6 +60,12 @@ const styles = StyleSheet.create({
   noImagesText: {
     fontSize: 18,
     color: "#333",
+    textAlign: "center",
+    marginTop: 20,
+  },
+  errorText: {
+    fontSize: 16,
+    color: "red",
     textAlign: "center",
     marginTop: 20,
   },
